@@ -1,5 +1,6 @@
-class Conta {
+abstract class Conta {
   
+
   String titular;
   double _saldo;
 
@@ -57,4 +58,30 @@ class ContaPoupanca extends Conta {
    _saldo += _saldo * rendimento;
    print("O saldo atual de $titular com rendimento é: R\$_saldo");
   }
+}
+
+mixin Impost {
+  double taxa = 0.03;
+
+  double valorTaxado(double value) {
+    return value * taxa;
+  }
+
+}
+
+class ContaEmpresa extends Conta with Impost {
+  ContaEmpresa(super.titular, super._saldo);
+
+  @override
+  void transferir(double value) {
+    if (_saldo >= value + valorTaxado(value)){
+      _saldo -= value + valorTaxado(value);
+    }
+  }
+
+   @override
+  void receber(double value) {
+      _saldo += value - valorTaxado(value);
+  }
+
 }
